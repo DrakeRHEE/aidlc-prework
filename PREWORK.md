@@ -246,13 +246,19 @@ Tech-env 내용 중 **절대 깨면 안 되는 것**만 골라 3~7줄로 만든�
 - NEVER add the `moment` library; use `date-fns` instead (affirmed 2026-11-20)
 - NEVER commit secrets or `.env` files (affirmed 2026-11-20)
 - NEVER modify `src/legacy/billing/**` (affirmed 2026-11-20)
+
+## Mandated
+- ALWAYS check on the server that a store owner reads and changes only their own store's data (affirmed 2026-11-20)
 ```
 
-- `Forbidden` 줄 형식은 AI-DLC 메모리 형식 `- NEVER [행동] (affirmed YYYY-MM-DD)`을 따른다.
-  날짜는 오늘 날짜를 쓴다.
+- 줄 형식은 AI-DLC 메모리 형식을 따른다. 금지는 `## Forbidden`에 `- NEVER [행동] (affirmed YYYY-MM-DD)`,
+  필수는 `## Mandated`에 `- ALWAYS [행동] (affirmed YYYY-MM-DD)`. `NEVER`/`ALWAYS`는 영어 그대로 두고,
+  뒤 문장은 한국어로 써도 된다. 날짜는 오늘 날짜를 쓴다.
+- `Mandated`는 선택이다. vision의 확정 사항 중 깨지기 쉬운 보안이나 권한 규칙(예: "자기 데이터만 조회")이
+  있으면 1~2줄 넣는다.
 - **파일이 이미 있으면** (AI-DLC가 만든 시드): 기존 내용을 지우지 말고, 해당 `##` 섹션 아래에
   줄을 **추가**한다.
-- **파일이 없으면**: `templates/project-memory.md` 구조(공식 시드와 같은 섹션 구성)로 만든다.
+- **파일이 없으면**: `templates/project-memory.md`(공식 시드 전체에 자리표시자만 넣은 것)로 만든다.
   AI-DLC는 이 파일이 없을 때만 새로 만들기 때문에, 미리 만들어도 덮어쓰지 않는다.
 
 **완료 조건:** 참가자가 절대 규칙 목록을 승인함.
@@ -297,6 +303,7 @@ Tech-env 내용 중 **절대 깨면 안 되는 것**만 골라 3~7줄로 만든�
 
 **Project memory (`aidlc/spaces/default/memory/project.md`)**
 - [ ] `## Forbidden` 아래 `- NEVER ... (affirmed YYYY-MM-DD)` 형식의 줄이 1개 이상 있음
+- [ ] `## Mandated`를 썼다면 `- ALWAYS ... (affirmed YYYY-MM-DD)` 형식임
 - [ ] 기존 시드 내용이 지워지지 않음
 
 **공통**
@@ -330,9 +337,13 @@ curl -fsSL https://github.com/awslabs/aidlc-workflows/releases/latest/download/i
 
 # 프로젝트 폴더에서
 aidlc config --harness claude     # Claude Code
-aidlc config --harness kiro       # Kiro IDE 또는 Kiro CLI(--v3)
+aidlc config --harness kiro-ide   # Kiro IDE 또는 Kiro CLI(--v3), 아래 참고
 aidlc doctor                      # 통과 기준: 요약에 "0 problems"
 ```
+
+> **Kiro 하네스 이름은 버전마다 다르다.** `aidlc --version`이 **2.11.3 이하**이면 Kiro IDE와 Kiro CLI(--v3)는
+> `aidlc config --harness kiro-ide`를 쓴다 (2.11.3 이하에서 `kiro`는 Kiro CLI V2를 뜻함). 2.11.4 이상에서는
+> `kiro`를 쓰고, `kiro-ide`도 같은 뜻으로 받는다. 헷갈리면 **`--harness kiro-ide`** 가 두 버전 모두에서 안전하다.
 
 ### 9-2. 준비 확인 (readiness pass mark): 퍼실리테이터가 이미 확인했으면 생략
 
@@ -352,9 +363,11 @@ aidlc doctor                      # 통과 기준: 요약에 "0 problems"
 - Kiro: 새 채팅에서 에이전트 선택기로 **aidlc** 선택 (CLI는 `kiro-cli --v3`).
 
 ```text
-/aidlc workshop --depth minimal --learnings off --summary-confirmation off Read ./vision.md and build what it describes
+/aidlc workshop --depth minimal --learnings off --summary-confirmation off ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
 ```
 
+- 마지막 문장이 대화 언어를 정한다. AI-DLC는 요청 문장의 언어로 대화하고 산출물을 쓴다.
+  영어 요청(`Read ./vision.md and build what it describes`)으로 시작하면 노트가 한국어여도 산출물은 영어로 나온다.
 - 기존 코드인데 AI-DLC가 신규 프로젝트로 인식하면, 요청에 그렇게 말하거나
   `/aidlc --project-type brownfield`로 시작한다.
 - learning loop를 배우는 것도 목적이면 `--learnings off`를 뺀다.

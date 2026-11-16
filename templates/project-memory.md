@@ -4,30 +4,73 @@
 > `team.md` as strict-additive guidance.
 > Populated by practices-discovery and the self-learning loop.
 >
-> (Created by aidlc-prework with the same sections as the AI-DLC seed.
-> AI-DLC creates this file only when it is missing, so it keeps this one.)
+> Use sparingly: most teams don't need a project layer. Reach for it
+> only when this specific project needs stable, durable guidance beyond the
+> team practice (for example, package-specific release checks or an additional
+> regression suite for a legacy component).
+
+> (Created by aidlc-prework from the AI-DLC 2.11.x seed. AI-DLC creates this
+> file only when it is missing, so it keeps this one.)
 
 ## Way of Working
 
+<!-- Project-specific specialisation. Example: -->
+<!-- This monorepo requires package-scoped branch names and a package owner -->
+<!-- review in addition to the team's normal merge policy. -->
+<!-- A project that merges into another branch than team.md names says so on its own line, read before team.md's: -->
+<!-- - **Integration branch**: develop -->
+
 ## Walking Skeleton
+
+<!-- Project-specific specialisation. Example: -->
+<!-- The walking skeleton must exercise the legacy service adapter as well -->
+<!-- as the new service boundary. -->
 
 ## Testing Posture
 
+<!-- Project-specific specialisation. -->
+
 ## Guard Policy
+
+<!-- Project-specific. Mode: strict, relaxed, or off. Strict here holds for every intent, whatever one person asks in chat; relaxed or off here applies to every intent whose policy came from its scope, unless the person sets another; changing this line changes it. A section under the retired Change Control heading, written by an earlier release, is still read. -->
 
 ## Deployment
 
+<!-- Project-specific specialisation. -->
+
 ## Code Style
+
+<!-- Project-specific specialisation. -->
 
 ## Tech Stack
 
+<!-- Technology choices locked for this project. -->
 - {{변경하면 안 되는 언어, 프레임워크, 버전}}
 
 ## Decided
 
+<!-- Decisions made in earlier stages that should not be re-asked. -->
+<!-- Format: DECIDED: [decision] (Stage [slug], [date]) -->
+
 ## Scope Overrides
+
+<!-- Custom scope rules for this project. -->
 
 ## Forbidden
 
-<!-- Format: - NEVER [behavior] (affirmed YYYY-MM-DD) -->
-- NEVER {{절대 하면 안 되는 행동}} (affirmed {{YYYY-MM-DD}})
+<!-- Populated by practices-discovery affirmation gate. -->
+<!-- Format: - NEVER [behavior] (affirmed [date]) -->
+<!-- Example: - NEVER throw exceptions across service layer boundaries (affirmed 2026-05-17) -->
+- NEVER {{절대 하면 안 되는 행동}}; {{대신 할 것}} (affirmed {{YYYY-MM-DD}})
+
+## Mandated
+
+<!-- Populated by practices-discovery affirmation gate. -->
+<!-- Format: - ALWAYS [behavior] (affirmed [date]) -->
+<!-- Example: - ALWAYS use Result<T,E> for fallible operations in service layer (affirmed 2026-05-17) -->
+- ALWAYS {{반드시 지킬 행동 (선택)}} (affirmed {{YYYY-MM-DD}})
+
+## Corrections
+
+<!-- Project-specific corrections from human feedback. -->
+<!-- Format: NEVER/ALWAYS [behavior] (learned [date]) -->

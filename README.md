@@ -63,6 +63,9 @@ $z="$env:TEMP\aidlc-prework.zip"; Invoke-WebRequest https://github.com/DrakeRHEE
 
 ### 3) 상담하며 답하기 (약 30~45분)
 
+> 에이전트가 `ls`, `aidlc --version`, `python3 --version` 같은 **읽기 전용 명령**의 실행 허락을 구하면 허용하세요.
+> 파일을 쓰기 전에는 항상 내용을 먼저 보여 주고 승인을 받습니다.
+
 에이전트가 9단계로 진행합니다. 각 단계에서 승인해야 다음 단계로 넘어갑니다.
 
 1. 환경 파악 → 2. 신규/기존 코드 판정 → 3. 주제와 1일 범위 → 4. Vision 초안 → 5. Tech-env 초안
@@ -71,7 +74,7 @@ $z="$env:TEMP\aidlc-prework.zip"; Invoke-WebRequest https://github.com/DrakeRHEE
 끝나면 에이전트가 **워크샵 시작 명령**을 알려 줍니다. 당일 **새 채팅**(Kiro는 **aidlc** 에이전트)에서 실행하세요.
 
 ```text
-/aidlc workshop --depth minimal --learnings off --summary-confirmation off Read ./vision.md and build what it describes
+/aidlc workshop --depth minimal --learnings off --summary-confirmation off ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
 ```
 
 직접 검증하려면 (macOS / Linux / WSL / Git Bash):

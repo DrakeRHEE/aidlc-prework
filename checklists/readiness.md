@@ -12,7 +12,7 @@
 ## B. AI-DLC 설치와 설정
 
 - [ ] `aidlc --version` 출력됨
-- [ ] 실습 폴더에서 `aidlc config --harness claude` 또는 `aidlc config --harness kiro` 실행
+- [ ] 실습 폴더에서 `aidlc config --harness claude` 또는 `aidlc config --harness kiro-ide` 실행 (Kiro IDE, Kiro CLI --v3 모두. 2.11.3 이하에서 `kiro`는 Kiro CLI V2를 뜻하므로 `kiro-ide`가 안전)
   - 통과: `Runtime` 행 `[ok]`와 `hook PATH ready`, `Trust` 행 `[ok]`
 - [ ] `aidlc doctor`의 요약이 `0 problems`
   - `Runtime hook PATH` 경고가 있으면 먼저 해결

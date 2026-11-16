@@ -12,7 +12,7 @@
 2) AI-DLC 설치
    macOS/Linux/WSL: curl -fsSL https://github.com/awslabs/aidlc-workflows/releases/latest/download/install.sh | sh
    Windows(일반 PowerShell): irm https://github.com/awslabs/aidlc-workflows/releases/latest/download/install.ps1 | iex
-3) 실습 폴더에서: aidlc config --harness claude  (Kiro는 --harness kiro)  →  aidlc doctor
+3) 실습 폴더에서: aidlc config --harness claude  (Kiro는 --harness kiro-ide)  →  aidlc doctor
 4) 실습 폴더에 pre-work 키트를 받고 AI 도구로 진행:
    https://github.com/DrakeRHEE/aidlc-prework 의 README "참가자: 3단계로 시작하기"를 따라 주세요.
 5) <회신 마감일>까지 아래를 회신해 주세요.
@@ -38,7 +38,7 @@
 - Kiro: 에이전트 선택기에서 **aidlc** 선택 (CLI는 `kiro-cli --v3`)
 
 ```text
-/aidlc workshop --depth minimal --learnings off --summary-confirmation off Read ./vision.md and build what it describes
+/aidlc workshop --depth minimal --learnings off --summary-confirmation off ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
 ```
 
 ## 4. 자주 쓰는 명령
