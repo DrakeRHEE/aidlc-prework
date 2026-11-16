@@ -30,7 +30,7 @@
 ```
 
 - Kiro IDE: 새 채팅 → **Default** 에이전트
-- Kiro CLI: `kiro-cli --v3` → 필요하면 `/agent swap`으로 기본 에이전트 선택
+- Kiro CLI: `kiro-cli --v3` → 채팅에 `/agent` 입력 → aidlc가 아닌 기본 에이전트 선택 (`aidlc config` 후에는 aidlc가 기본값)
 - Claude Code: 실습 폴더에서 `claude` → 일반 채팅
 
 ## 3. 당일 워크플로 시작 (새 채팅)
@@ -39,6 +39,12 @@
 
 ```text
 /aidlc workshop --depth minimal --learnings off --summary-confirmation off ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
+```
+
+기존 코드(Brownfield)이면 `--project-type brownfield`를 넣습니다.
+
+```text
+/aidlc workshop --depth minimal --learnings off --summary-confirmation off --project-type brownfield ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
 ```
 
 ## 4. 자주 쓰는 명령

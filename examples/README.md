@@ -7,9 +7,11 @@
 | [greenfield/](greenfield/) | 신규 | 사내 회의실 예약 웹앱 (local only, TypeScript) | 1일 범위 줄이기(Out 4개), 인라인 예시 코드 |
 | [greenfield-fieldcheck/](greenfield-fieldcheck/) | 신규 | 편의점 매장 점검 앱 (local only, Python + FastAPI + Jinja2) | **실제 Claude Code가 PREWORK.md로 상담해 만든 결과물** (2026-11-16 테스트). 8개 기능에서 5개로 범위 축소, AI-DLC 시드에 규칙 덧붙이기 |
 | [brownfield/](brownfield/) | 기존 코드 | 사내 도서 대여 API에 예약(대기열) 기능 추가 (FastAPI) | `Must Not Change`, `Never Changes`, 실제 파일 경로 인용, 기존 `project.md`에 덧붙이기 |
+| [brownfield-supplydesk/](brownfield-supplydesk/) | 기존 코드 | 사내 비품 신청 API에 팀 월 예산 한도 추가 (TypeScript + Express + PostgreSQL) | **실제 Kiro CLI(Default 에이전트)가 PREWORK.md로 상담해 만든 결과물** (2026-11-16 테스트). 코드에서 스택과 대표 파일 추출, 사람만 아는 제약(ERP 배치)을 Must Not Change와 Forbidden에 반영 |
 
 ```bash
 sh scripts/check-prework.sh examples/greenfield
 sh scripts/check-prework.sh examples/brownfield
 sh scripts/check-prework.sh examples/greenfield-fieldcheck
+sh scripts/check-prework.sh examples/brownfield-supplydesk
 ```

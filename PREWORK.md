@@ -46,9 +46,13 @@
 **도구별 주의**
 
 - **Kiro IDE / Kiro CLI:** 이 지침은 **Default 에이전트**에서 진행해야 한다.
-  `aidlc` 에이전트는 웹 접근과 일반 셸 명령이 제한되고 워크플로 진행용이기 때문이다.
-  지금 `aidlc` 에이전트라면 참가자에게 바꾸라고 안내한다
-  (IDE: 새 채팅을 열고 에이전트 선택기에서 Default 선택 / CLI: `/agent swap`으로 기본 에이전트 선택).
+  `aidlc` 에이전트는 워크플로 진행용이라 일반 셸 명령이 제한되고, 대화마다 AI-DLC hook이 실행된다.
+  - **에이전트는 자기가 어떤 에이전트인지 스스로 판별할 수 없다** (테스트에서 aidlc 에이전트가 자신을
+    Default로 잘못 판단함). 추정하지 말고, Step 1 확인 질문에서 참가자에게 직접 묻는다.
+  - Kiro IDE: 새 채팅은 기본적으로 Default로 시작한다. 에이전트 선택기에 **aidlc**가 선택되어 있으면 Default로 바꾼다.
+  - Kiro CLI: `aidlc config` 후에는 `.kiro/settings/cli.json`이 `aidlc`를 기본 에이전트로 지정한다.
+    `kiro-cli --v3`로 연 뒤 채팅에 `/agent`를 입력하고 **aidlc가 아닌 기본 에이전트**를 고르게 한다.
+    `.kiro/settings/cli.json`에 `"chat.defaultAgent": "aidlc"`가 있는데 참가자가 바꾼 적이 없다면 aidlc 에이전트일 가능성이 높다.
 - **Claude Code:** 일반 채팅에서 진행한다. `/aidlc` 스킬을 호출하지 않는다.
 
 ---
@@ -57,7 +61,7 @@
 
 다음을 **읽기만** 해서 파악하고 요약해 보여 준다.
 
-1. 현재 작업 폴더의 절대 경로, OS, 사용 중인 도구(Claude Code / Kiro IDE / Kiro CLI)
+1. 현재 작업 폴더의 절대 경로, OS. 사용 중인 도구(Claude Code / Kiro IDE / Kiro CLI)는 확실하지 않으면 추정하지 말고 확인 질문에 넣는다
 2. 폴더 내용: 숨김 폴더를 제외한 최상위 목록, 소스 코드와 빌드 파일 존재 여부
    (`package.json`, `pyproject.toml`, `requirements.txt`, `pom.xml`, `build.gradle`, `go.mod`, `Cargo.toml`, `*.csproj` 등)
 3. git 저장소 여부 (`.git` 존재)
@@ -69,6 +73,8 @@
 - 이 폴더가 오늘 워크샵에서 **실제로 실습할 폴더**가 맞나요? (공식 가이드: 폴더 신뢰와 hook
   설정은 폴더마다 다르므로, 연습용 폴더가 아니라 실제 폴더에서 준비해야 합니다.)
 - 몇 명이 이 프로젝트를 함께 하나요? (1명 / 2~3명 / 4명 이상)
+- (Kiro일 때만) 지금 쓰는 도구와 에이전트가 무엇인가요? (Kiro IDE / Kiro CLI, Default / aidlc)
+  aidlc라고 답하면 위 "도구별 주의"대로 Default로 바꾸고 이 지침을 다시 입력하라고 안내하고 멈춘다.
 
 **완료 조건:** 참가자가 폴더가 맞다고 확인함. 아니면 올바른 폴더에서 도구를 다시 열라고 안내하고 멈춘다.
 
@@ -368,8 +374,8 @@ aidlc doctor                      # 통과 기준: 요약에 "0 problems"
 
 - 마지막 문장이 대화 언어를 정한다. AI-DLC는 요청 문장의 언어로 대화하고 산출물을 쓴다.
   영어 요청(`Read ./vision.md and build what it describes`)으로 시작하면 노트가 한국어여도 산출물은 영어로 나온다.
-- 기존 코드인데 AI-DLC가 신규 프로젝트로 인식하면, 요청에 그렇게 말하거나
-  `/aidlc --project-type brownfield`로 시작한다.
+- **기존 코드(Brownfield)이면 시작 명령에 `--project-type brownfield`를 넣는다**:
+  `/aidlc workshop --depth minimal --learnings off --summary-confirmation off --project-type brownfield ./vision.md를 읽고 ...`
 - learning loop를 배우는 것도 목적이면 `--learnings off`를 뺀다.
 - 질문이 더 필요하면 `--depth minimal`을 뺀다 (Standard: stage당 5~8개 질문, Minimal: 2~4개).
 - Construction 전에 `aidlc/spaces/default/intents/<작업>/aidlc-state.md`에

@@ -49,7 +49,7 @@ $z="$env:TEMP\aidlc-prework.zip"; Invoke-WebRequest https://github.com/DrakeRHEE
 |---|---|---|
 | Claude Code | 실습 폴더에서 `claude` | 일반 채팅 (`/aidlc` 아님) |
 | Kiro IDE | 실습 폴더 열기 → 새 채팅 | 에이전트 선택기에서 **Default** (aidlc 아님) |
-| Kiro CLI | 실습 폴더에서 `kiro-cli --v3` | aidlc가 기본이면 `/agent swap`으로 기본 에이전트 선택 |
+| Kiro CLI | 실습 폴더에서 `kiro-cli --v3` | 채팅에 `/agent` 입력 → **aidlc가 아닌** 기본 에이전트 선택 (`aidlc config` 후에는 aidlc가 기본값) |
 
 채팅에 붙여 넣기:
 
@@ -75,6 +75,12 @@ $z="$env:TEMP\aidlc-prework.zip"; Invoke-WebRequest https://github.com/DrakeRHEE
 
 ```text
 /aidlc workshop --depth minimal --learnings off --summary-confirmation off ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
+```
+
+기존 코드(Brownfield)이면 `--project-type brownfield`를 넣습니다.
+
+```text
+/aidlc workshop --depth minimal --learnings off --summary-confirmation off --project-type brownfield ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
 ```
 
 직접 검증하려면 (macOS / Linux / WSL / Git Bash):
