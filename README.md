@@ -132,6 +132,7 @@ facilitator/                # 퍼실리테이터 자료
 ## 기준 버전과 출처
 
 - AI-DLC [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) v2.11.4 (2026-11 기준)
+- 검증: 2026-11-16, aidlc 2.11.4에서 Claude Code(신규 프로젝트)와 Kiro CLI 3.3.0(기존 코드)으로 상담부터 `/aidlc workshop` 시작까지 실제로 실행. 결과물은 `examples/greenfield-fieldcheck`, `examples/brownfield-supplydesk`
 - 노트 구조: [vision-document-guide.md](https://github.com/awslabs/aidlc-workflows/blob/main/docs/guide/writing-inputs/vision-document-guide.md),
   [technical-environment-guide.md](https://github.com/awslabs/aidlc-workflows/blob/main/docs/guide/writing-inputs/technical-environment-guide.md)의 short version
 - AI-DLC가 버전업되면 파일 위치와 시작 명령이 바뀔 수 있습니다. 워크샵 전에 공식 문서와 대조하세요.

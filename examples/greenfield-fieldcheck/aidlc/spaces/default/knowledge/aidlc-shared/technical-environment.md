@@ -1,154 +1,151 @@
-# Technical Environment: 그린마트 현장 점검 (fieldcheck)
+# Technical Environment: FieldCheck
 
 ## Project Technical Summary
 
-- **Project type**: New (Greenfield)
-- **Runtime environment**: Local only
-- **Team size and key skills**: 2명. 둘 다 Python 경험 있음. JavaScript와 프런트엔드 프레임워크 경험은 적음
+- **Project type**: New (신규, 기존 코드 없음)
+- **Runtime environment**: Local only (로컬 실행과 테스트만)
+- **Team size and key skills**: 2명. 둘 다 Python 경험만 있음 (JavaScript 프레임워크 경험 없음)
 
 ## Language
 
 | Language | Version | Purpose |
 |----------|---------|---------|
-| Python | 3.12 (uv로 설치) | API, 화면 렌더링, 비즈니스 로직, 테스트 |
-| HTML + Jinja2 템플릿 | Jinja2 3.x | 화면 (JavaScript 빌드 없음) |
+| Python | 3.12 (uv로 지정. macOS 기본 `python3` 3.9는 쓰지 않음) | 백엔드, 화면 렌더링, 테스트 |
+| HTML (Jinja2 템플릿) | - | 화면 3개 (점검표, 결과, 점주 조치 목록) + 첫 화면(사용자 선택) |
 
 ## Package Manager
 
-- uv 0.13.x: 의존성은 `uv add`로 추가하고, `pyproject.toml`과 `uv.lock`을 함께 커밋한다
+- uv 0.13.x. 의존성은 `uv add`로 추가하고 `pyproject.toml`과 `uv.lock`을 커밋한다. 실행은 `uv run ...`으로 한다
 
 ## Framework
 
 | Framework or library | Version | Area |
 |----------------------|---------|------|
-| FastAPI | 0.115 이상 (최신 안정판) | API와 화면 라우팅 |
-| Uvicorn | 0.30 이상 | 로컬 실행 서버 |
-| Jinja2 | 3.x | 서버 렌더링 화면 (HTML 폼) |
-| python-multipart | 0.0.x (최신) | 폼 입력과 사진 업로드 처리 |
+| FastAPI | 0.115 이상 | API, 라우팅 |
+| Jinja2 | 3.1.x | 서버 렌더링 HTML 화면 |
+| python-multipart | 0.0.9 이상 | HTML 폼 제출 처리 |
 | Pydantic | 2.x | 입력 검증 |
-| SQLAlchemy | 2.0.x | DB 접근 (ORM, 2.0 스타일 `select()`) |
-| itsdangerous | 2.x | 세션 쿠키 서명 (Starlette `SessionMiddleware`) |
+| SQLAlchemy | 2.0.x (2.0 스타일 `select()`, `Session`) | 데이터 접근 |
+| Uvicorn | 0.30 이상 | 로컬 개발 서버 |
 
-- **Data store**: SQLite 파일 (`data/fieldcheck.db`). 사진은 로컬 폴더 `uploads/`에 저장하고, DB에는 파일 경로만 저장한다
-- **Layout**: `app/` (`main.py`, `routes/`, `models.py`, `db.py`, `auth.py`, `scoring.py`, `templates/`), `tests/`, `uploads/`, `data/`
+- **Data store**: SQLite 파일 (`fieldcheck.db`, git에 넣지 않음). 테스트는 인메모리 SQLite를 쓴다
+- **Structure**: `app/main.py`(앱 생성), `app/routers/`(화면과 엔드포인트), `app/services/`(점수 계산과 조치 요청 생성 같은 비즈니스 로직, 순수 함수), `app/models.py`(SQLAlchemy 모델), `app/db.py`(세션), `app/templates/`(Jinja2), `tests/`
+- **Seed data**: 시작 시 샘플 매장 몇 곳, 슈퍼바이저 1명, 매장별 점주 사용자, 점검 항목을 넣는다
 
 ## Cloud and Deployment
 
-- local only: `uv run uvicorn app.main:app --reload`로 실행하고, `uv run pytest`로 테스트한다. 클라우드 배포는 하지 않는다
+- local only: `uv run uvicorn app.main:app --reload`로 실행하고 `uv run pytest`로 테스트한다. 클라우드 배포는 하지 않는다
 
 ## Testing
 
 | Test type | Required | Target | Tooling |
 |-----------|----------|--------|---------|
-| Unit | Yes | 점수 계산 (위생 2배, 70점 기준), 미흡 항목의 조치 요청 생성 | pytest 8.x |
-| Integration | Yes | ① 점검 제출 → 점수와 조치 요청 생성 ② 점주가 다른 매장 조치 요청에 접근하면 403 | pytest + FastAPI `TestClient` (httpx) |
+| Unit | Yes | `app/services/`의 점수 계산, 재점검 판정(70점 경계), 미흡 항목별 조치 요청 생성 | pytest 8.x |
+| Integration | Yes | 1~2개 흐름: 점검표 제출 → 점수와 조치 요청 생성, 점주가 다른 매장 조치 요청 완료 시도 → 거부 | pytest + FastAPI `TestClient` (httpx) |
 
-- **Test location**: `tests/` 폴더, 파일명은 `test_*.py`
-- **Strategy**: Minimal. 핵심 로직 단위 테스트와 API 통합 테스트 1~2개. 통합 테스트는 임시 SQLite와 임시 업로드 폴더를 쓴다
+- **Test location**: `tests/` 폴더, 파일명 `test_<대상>.py`
+- **Strategy**: Minimal. 요구사항마다 테스트 하나, 경계값(70점)과 권한 거부는 반드시 포함
 
 ## Prohibited
 
 | Prohibited | Reason | Use instead |
 |------------|--------|-------------|
-| `pip install` 직접 실행, `requirements.txt` 수동 관리 | 두 사람 PC의 의존성 버전이 어긋남 | `uv add <패키지>`, `uv.lock` 커밋 |
-| React, Vue 등 JavaScript 프레임워크와 npm 빌드 | 팀이 JavaScript에 익숙하지 않고 하루 범위를 넘음 | Jinja2 템플릿 + HTML 폼 |
-| f-string이나 문자열 연결로 만든 SQL | SQL 인젝션 위험 | SQLAlchemy `select()`와 바인드 파라미터 |
-| 코드에 하드코딩한 비밀값 (세션 서명 키 등) | git을 통해 유출됨 | `.env`의 환경변수 (`SESSION_SECRET`), `.env.example`만 커밋 |
-| 업로드한 파일명을 그대로 저장 경로로 사용 | 경로 조작, 파일 덮어쓰기 위험 | 서버에서 UUID 파일명 생성, 확장자 허용 목록 (`.jpg`, `.jpeg`, `.png`) |
-| 외부 저장소나 외부 알림 API 호출 (S3, 알림톡 등) | local only 범위이고, 알림톡은 Out of Scope | 로컬 `uploads/` 폴더, 화면에서 상태 표시 |
+| React, Vue, npm 등 JavaScript 프레임워크와 빌드 도구 | 팀이 Python만 다룰 수 있고, 하루 일정에 JS 빌드 설정을 넣을 여유가 없음 | Jinja2 템플릿 + 일반 HTML 폼 |
+| `pip install` 직접 실행, `requirements.txt` 수동 관리 | 두 사람의 환경이 달라지고 lock이 없어 재현이 안 됨 | `uv add` + `uv.lock` 커밋, `uv run`으로 실행 |
+| f-string 등 문자열 조합으로 만든 SQL | SQL 인젝션 위험 | SQLAlchemy `select()`와 바인딩 파라미터 |
+| 폼이나 쿼리로 받은 `store_id`, `user_id`로 권한 판단 | 점주가 값을 바꿔 다른 매장 데이터를 볼 수 있음 | 서버가 현재 사용자(`get_current_user`)에서 `store_id`를 읽어 비교 |
+| 라우터나 템플릿 안에 점수 계산 로직 작성 | 테스트하기 어렵고 규칙이 여러 곳에 흩어짐 | `app/services/`의 순수 함수로 두고 라우터는 호출만 |
+| 카카오 알림톡 등 외부 API 호출 코드 | 1차 범위 밖이고 local only | 조치 요청은 DB 레코드로만 생성 |
+| 코드에 비밀값 하드코딩 | 유출 위험 | 환경변수 (`.env`, git에는 `.env.example`만) |
 
 ## Security
 
-- **Sign-in**: 고정 사용자. 첫 화면에서 샘플 사용자(슈퍼바이저 또는 매장별 점주)를 고르면 서명된 세션 쿠키(`SessionMiddleware`)에 저장한다. 비밀번호는 없다. 점주 접근 권한은 매 요청마다 서버에서 `store_id`로 검사한다
-- **Input validation**: 모든 폼 입력은 FastAPI `Form` 타입과 Pydantic v2로 검증한다. 업로드는 확장자 허용 목록과 크기 상한(파일당 10MB)으로 제한한다
-- **Secrets**: `.env`에 보관하고 git에는 `.env.example`만 커밋한다. `.env`, `data/*.db`, `uploads/`는 `.gitignore`에 넣는다
+- **Sign-in**: 정식 로그인 없음. 첫 화면에서 고정 사용자(슈퍼바이저 1명 또는 매장별 점주)를 고르면, 서버가 사용자 ID를 서명된 세션 쿠키(Starlette `SessionMiddleware`)에 저장한다. 모든 요청은 `get_current_user`로 사용자와 역할, 매장을 확인한다. 점주는 자기 매장의 조치 요청만 조회하고 완료할 수 있다
+- **Input validation**: 모든 폼과 경로 입력은 FastAPI 타입 선언과 Pydantic 모델로 검증한다. 잘못된 항목 ID나 판정 값은 400/422로 거부한다
+- **Secrets**: 세션 서명 키는 환경변수 `SESSION_SECRET`(`.env`)로 받는다. `.env`와 `fieldcheck.db`는 `.gitignore`에 넣고 `.env.example`만 커밋한다
 
 ## Example Code
 
 ### Endpoint
 
 ```python
+# app/routers/actions.py
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
-from app.auth import current_user
 from app.db import get_db
+from app.deps import get_current_user
 from app.models import ActionRequest, User
 
 router = APIRouter()
 
 
-@router.post("/action-requests/{request_id}/complete")
-def complete_action_request(
-    request_id: int,
-    user: User = Depends(current_user),
+@router.post("/actions/{action_id}/complete")
+def complete_action(
+    action_id: int,
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    ar = db.get(ActionRequest, request_id)
-    if ar is None:
+    action = db.get(ActionRequest, action_id)
+    if action is None:
         raise HTTPException(status_code=404, detail="조치 요청을 찾을 수 없습니다")
-    if user.role != "owner" or ar.store_id != user.store_id:
+    if user.role != "owner" or action.store_id != user.store_id:
         raise HTTPException(status_code=403, detail="자기 매장의 조치 요청만 처리할 수 있습니다")
-    if ar.status == "requested":
-        ar.status = "done"
-        db.commit()
-    return RedirectResponse(url="/owner/action-requests", status_code=303)
+    action.status = "done"
+    db.commit()
+    return RedirectResponse("/actions", status_code=303)
 ```
 
 ### Function
 
 ```python
+# app/services/inspection.py
 from dataclasses import dataclass
 
-# 위생 2배, 70점 미만 재점검은 확정 규칙. 100점 만점 환산은 임시안 (vision Open Questions)
-CATEGORY_WEIGHTS = {"hygiene": 2, "display": 1, "expiry": 1}
 RECHECK_THRESHOLD = 70
 
 
 @dataclass(frozen=True)
 class ItemResult:
+    item_id: int
     category: str  # "hygiene" | "display" | "expiry"
     passed: bool
 
 
-def calculate_score(items: list[ItemResult]) -> tuple[int, bool]:
-    """(점수, 재점검 대상 여부)를 돌려준다."""
-    if not items:
-        raise ValueError("점검 항목이 비어 있습니다")
-    total = sum(CATEGORY_WEIGHTS[i.category] for i in items)
-    earned = sum(CATEGORY_WEIGHTS[i.category] for i in items if i.passed)
-    score = round(earned * 100 / total)
-    return score, score < RECHECK_THRESHOLD
+def is_recheck_target(score: float) -> bool:
+    """총점이 70점 미만이면 재점검 대상이다."""
+    return score < RECHECK_THRESHOLD
+
+
+def deficient_items(results: list[ItemResult]) -> list[ItemResult]:
+    """미흡 항목만 돌려준다. 항목 하나당 조치 요청 1건을 만든다."""
+    return [r for r in results if not r.passed]
 ```
 
 ### Test
 
 ```python
+# tests/test_inspection.py
 import pytest
 
-from app.scoring import ItemResult, calculate_score
+from app.services.inspection import ItemResult, deficient_items, is_recheck_target
 
 
-def test_all_passed_is_100_and_not_recheck():
-    items = [ItemResult("hygiene", True), ItemResult("display", True)]
-    assert calculate_score(items) == (100, False)
+@pytest.mark.parametrize("score, expected", [(69.9, True), (70, False), (100, False)])
+def test_is_recheck_target_boundary(score, expected):
+    assert is_recheck_target(score) is expected
 
 
-def test_hygiene_failure_counts_double():
-    # 위생(2) 미흡, 진열(1)과 유통기한(1) 적합 → 2/4 = 50점
-    items = [ItemResult("hygiene", False), ItemResult("display", True), ItemResult("expiry", True)]
-    assert calculate_score(items) == (50, True)
+def test_deficient_items_returns_only_failed():
+    results = [
+        ItemResult(1, "hygiene", False),
+        ItemResult(2, "display", True),
+        ItemResult(3, "expiry", False),
+    ]
+    assert [r.item_id for r in deficient_items(results)] == [1, 3]
 
 
-def test_exactly_70_is_not_recheck():
-    # 위생 3개 적합(6) + 진열 1개 적합(1), 진열과 유통기한 3개 미흡 → 7/10 = 70점
-    items = [ItemResult("hygiene", True)] * 3 + [ItemResult("display", True)] + [
-        ItemResult("display", False), ItemResult("expiry", False), ItemResult("expiry", False)]
-    assert calculate_score(items) == (70, False)
-
-
-def test_empty_items_raises():
-    with pytest.raises(ValueError):
-        calculate_score([])
+def test_deficient_items_empty_when_all_passed():
+    assert deficient_items([ItemResult(1, "hygiene", True)]) == []
 ```

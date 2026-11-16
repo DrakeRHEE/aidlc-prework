@@ -1,8 +1,8 @@
 # Project-Level Rules
 
 > Project-specific specialisation and corrections. Loaded after `org.md` and
-> `team.md` as strict-additive guidance; contradictions with broader policy
-> are rejected. Populated by practices-discovery and the self-learning loop.
+> `team.md` as strict-additive guidance.
+> Populated by practices-discovery and the self-learning loop.
 >
 > Use sparingly: most teams don't need a project layer. Reach for it
 > only when this specific project needs stable, durable guidance beyond the
@@ -14,6 +14,8 @@
 <!-- Project-specific specialisation. Example: -->
 <!-- This monorepo requires package-scoped branch names and a package owner -->
 <!-- review in addition to the team's normal merge policy. -->
+<!-- A project that merges into another branch than team.md names says so on its own line, read before team.md's: -->
+<!-- - **Integration branch**: develop -->
 
 ## Walking Skeleton
 
@@ -40,7 +42,7 @@
 ## Tech Stack
 
 <!-- Technology choices locked for this project. -->
-- Python 3.12, uv, FastAPI, Jinja2 서버 렌더링 + HTML 폼, SQLAlchemy 2.0, SQLite, pytest (변경 금지)
+- Python 3.12 (uv), FastAPI, Jinja2 서버 렌더링 HTML, SQLAlchemy 2.0 + SQLite, pytest (변경 금지)
 
 ## Decided
 
@@ -54,20 +56,19 @@
 ## Forbidden
 
 <!-- Populated by practices-discovery affirmation gate. -->
-<!-- Format: NEVER [behavior] (affirmed [date]) -->
-<!-- Example: NEVER throw exceptions across service layer boundaries (affirmed 2026-05-17) -->
-- NEVER React, Vue 등 JavaScript 프레임워크나 npm 빌드 도구 추가 — Jinja2 템플릿과 HTML 폼 사용 (affirmed 2026-11-16)
-- NEVER `pip install` 직접 실행이나 수동 `requirements.txt` 관리 — `uv add`와 `uv.lock` 사용 (affirmed 2026-11-16)
-- NEVER 문자열로 조립한 SQL — SQLAlchemy `select()`와 바인드 파라미터 사용 (affirmed 2026-11-16)
-- NEVER 코드에 비밀값 하드코딩 또는 `.env` 파일 커밋 — 환경변수와 `.env.example` 사용 (affirmed 2026-11-16)
-- NEVER 외부 저장소나 외부 알림 API 호출 (S3, 알림톡 등) — local only, 로컬 `uploads/` 폴더 사용 (affirmed 2026-11-16)
+<!-- Format: - NEVER [behavior] (affirmed [date]) -->
+<!-- Example: - NEVER throw exceptions across service layer boundaries (affirmed 2026-05-17) -->
+- NEVER add JavaScript frameworks or build tools (React, Vue, npm 등); 화면은 Jinja2 템플릿과 HTML 폼으로 만든다 (affirmed 2026-11-16)
+- NEVER decide authorization from client-supplied `store_id` or `user_id` (폼, 쿼리, 경로 값); 서버의 현재 사용자에서 읽는다 (affirmed 2026-11-16)
+- NEVER commit secrets, `.env`, or the SQLite DB file (`fieldcheck.db`) (affirmed 2026-11-16)
+- NEVER call external messaging APIs (카카오 알림톡 등) in this release; 조치 요청은 DB 레코드로만 만든다 (affirmed 2026-11-16)
 
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
-<!-- Format: ALWAYS [behavior] (affirmed [date]) -->
-<!-- Example: ALWAYS use Result<T,E> for fallible operations in service layer (affirmed 2026-05-17) -->
-- ALWAYS 점주 요청은 서버에서 `store_id`를 검사해 자기 매장 데이터만 조회하고 수정하게 함 (affirmed 2026-11-16)
+<!-- Format: - ALWAYS [behavior] (affirmed [date]) -->
+<!-- Example: - ALWAYS use Result<T,E> for fallible operations in service layer (affirmed 2026-05-17) -->
+- ALWAYS check on the server that an owner reads and completes only their own store's action requests; 다른 매장 요청은 403으로 거부한다 (affirmed 2026-11-16)
 
 ## Corrections
 

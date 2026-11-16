@@ -1,8 +1,8 @@
 # Project-Level Rules
 
 > Project-specific specialisation and corrections. Loaded after `org.md` and
-> `team.md` as strict-additive guidance; contradictions with broader policy
-> are rejected. Populated by practices-discovery and the self-learning loop.
+> `team.md` as strict-additive guidance.
+> Populated by practices-discovery and the self-learning loop.
 >
 > Use sparingly: most teams don't need a project layer. Reach for it
 > only when this specific project needs stable, durable guidance beyond the
@@ -14,6 +14,8 @@
 <!-- Project-specific specialisation. Example: -->
 <!-- This monorepo requires package-scoped branch names and a package owner -->
 <!-- review in addition to the team's normal merge policy. -->
+<!-- A project that merges into another branch than team.md names says so on its own line, read before team.md's: -->
+<!-- - **Integration branch**: develop -->
 
 ## Walking Skeleton
 
@@ -40,7 +42,8 @@
 ## Tech Stack
 
 <!-- Technology choices locked for this project. -->
-- TypeScript 5.6 (strict, ESM), Node.js >=20, Express 4, Zod 3, pg 8 + PostgreSQL 16, Vitest 2 + supertest (변경 금지. 새 런타임 의존성은 추가하지 않는다)
+- TypeScript 5.6 (strict, ESM), Node.js >= 20, Express 4, Zod 3, pg 8 (수기 SQL), Vitest 2 + supertest (변경 금지)
+- 날짜/시간은 외부 라이브러리 없이 표준 `Date` + `Intl.DateTimeFormat`(`Asia/Seoul`)만 사용
 
 ## Decided
 
@@ -54,24 +57,21 @@
 ## Forbidden
 
 <!-- Populated by practices-discovery affirmation gate. -->
-<!-- Format: NEVER [behavior] (affirmed [date]) -->
-<!-- Example: NEVER throw exceptions across service layer boundaries (affirmed 2026-05-17) -->
-- NEVER `src/legacy/erp/**` 아래 파일을 수정한다. 재무팀 소유다 (affirmed 2026-11-16)
-- NEVER `requests.status` 값 집합(`pending`/`approved`/`rejected`)에 새 값을 추가하거나 의미를 바꾸고, `erp_sent_at` 컬럼 의미를 바꾼다. ERP 야간 배치가 깨진다 (affirmed 2026-11-16)
-- NEVER 이미 적용된 마이그레이션 `migrations/001_init.sql`, `002_erp_sent.sql`을 수정한다. 스키마 변경은 새 번호 파일로만 추가한다 (affirmed 2026-11-16)
-- NEVER `src/middleware/auth.ts`와 게이트웨이 헤더 계약을 수정하거나 새 역할을 추가한다 (affirmed 2026-11-16)
-- NEVER `routes/`나 `services/`에서 SQL을 쓰거나 `pool`을 임포트한다. SQL은 `src/repositories/`에만 둔다 (affirmed 2026-11-16)
-- NEVER `moment`를 새 코드에 쓴다. 표준 `Date` + `Intl.DateTimeFormat`(`Asia/Seoul`)을 쓴다 (affirmed 2026-11-16)
-- NEVER 비밀값이나 `.env` 파일을 커밋한다. `.env.example`만 커밋한다 (affirmed 2026-11-16)
+<!-- Format: - NEVER [behavior] (affirmed [date]) -->
+<!-- Example: - NEVER throw exceptions across service layer boundaries (affirmed 2026-05-17) -->
+- NEVER `src/legacy/erp/**`를 수정하지 않는다. 재무팀 소유이며 변경은 재무팀에 요청한다 (affirmed 2026-11-16)
+- NEVER `requests.status` 값 집합(`pending`/`approved`/`rejected`)을 바꾸거나 새 상태를 추가하지 않는다. ERP 야간 배치가 `status='approved' AND erp_sent_at IS NULL`을 읽으므로 깨진다 (affirmed 2026-11-16)
+- NEVER `migrations/001_init.sql`, `migrations/002_erp_sent.sql`과 `requests`, `items`의 기존 컬럼을 변경·삭제하지 않는다. 운영 DB에 적용됨. 새 `migrations/003_*.sql`로 추가만 한다 (affirmed 2026-11-16)
+- NEVER `src/middleware/auth.ts`와 게이트웨이 헤더 계약(`X-Employee-Id`, `X-Employee-Role`, `X-Team-Id`)을 변경하지 않는다 (affirmed 2026-11-16)
+- NEVER 기존 5개 API의 요청/응답 형식을 변경·삭제하지 않는다. `POST /requests`에 예산 초과 오류 코드 하나를 추가하는 것만 허용 (affirmed 2026-11-16)
 
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
-<!-- Format: ALWAYS [behavior] (affirmed [date]) -->
-<!-- Example: ALWAYS use Result<T,E> for fallible operations in service layer (affirmed 2026-05-17) -->
-- ALWAYS 예산 초과 거부는 신청 행을 만들지 않고 HTTP 오류 응답으로만 처리한다 (affirmed 2026-11-16)
-- ALWAYS 팀 예산 조회와 한도 검사의 팀 ID는 요청 본문이나 쿼리가 아닌 `req.employee.teamId`에서 가져오고, 팀장은 자기 팀만 조회한다 (affirmed 2026-11-16)
-- ALWAYS 예산 기준 월은 한국 시간(Asia/Seoul) 1일~말일로 계산한다 (affirmed 2026-11-16)
+<!-- Format: - ALWAYS [behavior] (affirmed [date]) -->
+<!-- Example: - ALWAYS use Result<T,E> for fallible operations in service layer (affirmed 2026-05-17) -->
+- ALWAYS 팀 단위 데이터(예산, 잔액, 신청)는 서버에서 `req.employee.teamId`로 범위를 제한하고, 클라이언트가 보낸 팀 ID는 믿지 않는다 (affirmed 2026-11-16)
+- ALWAYS 금액은 원 단위 `INTEGER`/정수 `number`로 다루고, 예산 초과는 신청을 접수하지 않고 4xx로 응답한다. 합계가 한도와 같으면 접수한다 (affirmed 2026-11-16)
 
 ## Corrections
 
