@@ -16,11 +16,16 @@
 참가자와 상담해 아래 **3개 파일을 현재 프로젝트 폴더에 만들고 검증한 뒤**, 참가자가 AI-DLC
 워크플로를 바로 시작할 수 있게 넘겨주는 것입니다.
 
-| # | 파일 | 위치 (프로젝트 루트 기준) | 역할 |
-|---|---|---|---|
-| 1 | Vision note | `./vision.md` | 무엇을, 누구를 위해, 왜 만드는지와 1차 범위. 첫 `/aidlc` 요청에 넣는다 |
-| 2 | Tech-environment note | `./aidlc/spaces/default/knowledge/aidlc-shared/technical-environment.md` | 어떻게 만드는지(스택, 금지, 보안, 테스트, 예시 코드). 모든 stage가 읽는다 |
-| 3 | Project memory | `./aidlc/spaces/default/memory/project.md` | 절대 깨면 안 되는 규칙 몇 줄. 모든 stage가 규칙으로 적용한다 |
+| # | 파일 | 위치 (프로젝트 루트 기준) | 역할 | 왜 이 위치인가 |
+|---|---|---|---|---|
+| 1 | Vision note | `./vision.md` | 무엇을, 누구를 위해, 왜 만드는지와 1차 범위 | 첫 `/aidlc` 요청에서 이 파일을 지정하면 Intent Capture, Requirements 단계가 여기서 계획을 세운다 |
+| 2 | Tech-environment note | `./aidlc/spaces/default/knowledge/aidlc-shared/technical-environment.md` | 어떻게 만드는지(스택, 금지, 보안, 테스트, 예시 코드) | `aidlc-shared/` 안의 Markdown은 **모든 stage, 모든 에이전트**가 읽는다. 설계와 코드 생성이 기본값을 추측하지 않게 된다 |
+| 3 | Project memory | `./aidlc/spaces/default/memory/project.md` | 절대 깨면 안 되는 규칙 몇 줄 | memory 파일은 참고 자료가 아니라 모든 stage가 **규칙으로 적용**한다. 꼭 지켜야 하는 몇 줄만 둔다 |
+
+**이 작업을 하는 이유 (참가자에게 처음에 한 번 설명한다):** 자유 주제 워크샵에서 pre-work notes 없이
+`/aidlc`를 시작하면, 첫 1시간이 "무엇을 만들지, 어떤 기술을 쓸지"를 묻고 답하는 데 쓰인다. 미리 정리해 두면
+AI-DLC의 질문은 이미 적은 답을 확인하는 수준이 되고, 하루 안에 설계부터 코드와 테스트까지 한 바퀴를 돌 수 있다.
+(AI-DLC 공식 퍼실리테이터 가이드의 권장 사항이다.)
 
 **절대 규칙 (MUST)**
 
@@ -42,6 +47,9 @@
    언어(기본 한국어)로 쓴다. 기술 고유명사(라이브러리, 버전, 서비스명)는 원어 그대로 쓴다.
 9. **분량은 short version이 기준이다.** 1일 워크샵에는 공식 가이드의 short version이면
    충분하다. 참가자가 원할 때만 섹션을 늘린다.
+10. **이유를 함께 말하라.** 각 단계를 시작할 때 `[Step N/9] 제목` 바로 다음 줄에 `왜:`로 시작하는
+    한두 문장으로, 그 단계를 하는 이유를 참가자의 말로 설명한다. 각 Step의 **"왜"** 문단을 그대로
+    읽지 말고 참가자의 상황(주제, 신규/기존)에 맞춰 풀어 쓴다. 추천안을 줄 때도 추천 이유를 한 줄 붙인다.
 
 **도구별 주의**
 
@@ -58,6 +66,8 @@
 ---
 
 ## Step 1/9. 환경 파악 (읽기 전용)
+
+**왜:** 같은 지침이라도 폴더 상태(코드 유무, AI-DLC 설정, 이미 있는 파일)에 따라 할 일이 달라진다. 먼저 읽기만 해서 상태를 파악하면 엉뚱한 폴더에 파일을 쓰거나 기존 파일을 덮어쓰는 일을 막을 수 있다.
 
 다음을 **읽기만** 해서 파악하고 요약해 보여 준다.
 
@@ -81,6 +91,8 @@
 ---
 
 ## Step 2/9. 프로젝트 유형 결정: 신규 vs 기존 코드
+
+**왜:** 신규와 기존 코드는 노트에 써야 할 내용이 다르다. 기존 코드라면 "바꾸면 안 되는 것"이 가장 중요한데, 코드는 AI가 읽을 수 있어도 손대면 안 되는 부분은 사람만 안다. 에이전트가 코드를 먼저 읽고 초안을 채우면 참가자는 확인만 하면 된다.
 
 Step 1 결과로 추정을 제시하고 확인받는다.
 
@@ -106,6 +118,8 @@ Step 1 결과로 추정을 제시하고 확인받는다.
 ---
 
 ## Step 3/9. 주제 상담과 1일 범위 정하기
+
+**왜:** 하루 워크샵에서 가장 흔한 실패는 범위가 너무 커서 설계 단계에서 시간이 끝나는 것이다. 데모 장면 하나와 핵심 흐름 하나로 범위를 좁혀야 Inception, Construction, Operation을 모두 경험할 수 있다. 빠진 기능은 Out of Scope에 남겨서 다음 단계로 넘긴다.
 
 워크샵은 **자유 주제**입니다. 이 단계의 목표는 하루 안에 Inception, Construction, Operation을
 한 바퀴 경험할 수 있는 크기로 주제를 정하는 것입니다.
@@ -138,6 +152,8 @@ Step 1 결과로 추정을 제시하고 확인받는다.
 ---
 
 ## Step 4/9. Vision note 인터뷰와 초안
+
+**왜:** AI-DLC의 Intent Capture, Scope, Requirements 단계는 vision note를 기준으로 계획을 세운다. 여기에 답이 있으면 그 단계들의 질문이 확인 수준으로 줄어든다. Out of Scope와 Open Questions는 범위가 몰래 커지는 것을 막고, 애매한 점을 설계 전에 꺼내 준다.
 
 `templates/vision.md` 구조를 따른다. 이 지침을 URL로만 읽어 템플릿 파일이 없으면 아래 구조를
 그대로 쓴다. 섹션 제목은 그대로 둔다.
@@ -179,6 +195,8 @@ note에 쓴다. "직관적", "원활한" 같은 수치 없는 형용사도 쓰�
 ---
 
 ## Step 5/9. Tech-environment note 인터뷰와 초안
+
+**왜:** 이 노트가 없으면 설계와 코드 생성 단계가 기술 선택을 하나하나 묻거나, 기본값을 골라 나중에 바꾸게 만든다. 금지 목록에 이유와 대안이 있으면 AI가 알맞은 대체재를 고를 수 있고, 예시 코드가 있으면 생성되는 코드가 팀 스타일을 따른다.
 
 `templates/technical-environment.md` 구조를 따른다. 템플릿이 없으면 아래 구조를 쓴다.
 
@@ -242,6 +260,8 @@ note에 쓴다. "직관적", "원활한" 같은 수치 없는 형용사도 쓰�
 
 ## Step 6/9. Project memory (절대 규칙) 정리
 
+**왜:** tech-env는 참고 자료이고, project memory는 모든 단계가 반드시 적용하는 규칙이다. 어기면 사고가 나는 것(레거시 수정, 비밀값 커밋, 권한 누락 등)만 여기에 두면 AI가 긴 작업 중에도 잊지 않는다. 너무 많이 넣으면 중요한 규칙이 묻히므로 몇 줄만 둔다.
+
 Tech-env 내용 중 **절대 깨면 안 되는 것**만 골라 3~7줄로 만든다. 예:
 
 ```markdown
@@ -273,6 +293,8 @@ Tech-env 내용 중 **절대 깨면 안 되는 것**만 골라 3~7줄로 만든�
 
 ## Step 7/9. 파일 쓰기
 
+**왜:** AI-DLC는 정해진 위치의 파일만 자동으로 읽는다. 위치가 틀리면 노트를 써 놓고도 워크플로가 보지 못한다. AI-DLC 엔진이 관리하는 다른 파일은 건드리지 않아야 워크플로 상태가 꼬이지 않는다.
+
 1. 필요한 폴더를 만든다: `aidlc/spaces/default/knowledge/aidlc-shared/`, `aidlc/spaces/default/memory/`
 2. 승인된 내용으로 3개 파일을 쓴다 (규칙 6: 덮어쓰기 전 확인).
 3. 이 가이드를 `.aidlc-prework/` 폴더로 내려받았다면, `.gitignore`에 `.aidlc-prework/`를 추가할지
@@ -287,6 +309,8 @@ Tech-env 내용 중 **절대 깨면 안 되는 것**만 골라 3~7줄로 만든�
 ---
 
 ## Step 8/9. 자체 검증
+
+**왜:** 빈 섹션, 남은 템플릿 자리표시자, 이유 없는 금지 항목이 있으면 당일 워크플로가 그 부분을 다시 묻거나 잘못 해석한다. 지금 고치는 데 1분이면 되는 일이 당일에는 10분이 된다.
 
 먼저 아래 체크리스트를 **직접 확인**하고 결과를 표(항목 | 결과 | 조치)로 보여 준다. 실패한
 항목은 참가자와 함께 고친 뒤 다시 확인한다.
@@ -328,6 +352,8 @@ sh .aidlc-prework/scripts/check-prework.sh .
 ---
 
 ## Step 9/9. AI-DLC 준비 확인과 시작 안내
+
+**왜:** AI-DLC는 hook으로 승인 게이트와 진행 순서를 지킨다. hook이 실행되지 않는 PC는 `aidlc doctor`만으로는 문제가 드러나지 않고, 당일 승인이 기록되지 않는 문제로 나타난다. 미리 한 번 돌려 보면 당일 설치 문제로 시간을 잃지 않는다. 시작 명령은 이 대화가 아니라 새 채팅에서 실행해야 pre-work 대화 내용이 워크플로에 섞이지 않는다.
 
 이 단계에서는 **명령을 안내만** 하고 워크플로는 실행하지 않는다 (규칙 1).
 참가자에게 아래 순서를 도구에 맞게 **복사해서 쓸 수 있는 형태로** 안내한다.
@@ -372,15 +398,27 @@ aidlc doctor                      # 통과 기준: 요약에 "0 problems"
 /aidlc workshop --depth minimal --learnings off --summary-confirmation off ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
 ```
 
-- 마지막 문장이 대화 언어를 정한다. AI-DLC는 요청 문장의 언어로 대화하고 산출물을 쓴다.
-  영어 요청(`Read ./vision.md and build what it describes`)으로 시작하면 노트가 한국어여도 산출물은 영어로 나온다.
-- **기존 코드(Brownfield)이면 시작 명령에 `--project-type brownfield`를 넣는다**:
-  `/aidlc workshop --depth minimal --learnings off --summary-confirmation off --project-type brownfield ./vision.md를 읽고 ...`
-- learning loop를 배우는 것도 목적이면 `--learnings off`를 뺀다.
-- 질문이 더 필요하면 `--depth minimal`을 뺀다 (Standard: stage당 5~8개 질문, Minimal: 2~4개).
+**기존 코드(Brownfield)이면** `--project-type brownfield`를 넣는다:
+
+```text
+/aidlc workshop --depth minimal --learnings off --summary-confirmation off --project-type brownfield ./vision.md를 읽고 거기 적힌 것을 만들어 주세요. 대화와 산출물은 한국어로 진행해 주세요.
+```
+
+명령의 각 부분과 이유 (참가자에게 이 표를 보여 준다):
+
+| 부분 | 하는 일 | 왜 |
+|---|---|---|
+| `workshop` | 워크샵용 scope. Ideation을 건너뛰고 Inception부터 Operation까지 실행 | 주제와 범위는 pre-work에서 이미 정했으므로 아이디어 발굴 단계가 필요 없다. 테스트 전략도 Minimal이라 하루 일정에 맞는다 |
+| `--depth minimal` | stage당 질문을 2~4개로 줄임 (Standard는 5~8개) | 노트에 답이 이미 있으므로 질문을 줄여 시간을 아낀다. 시간이 남으면 빼도 된다 |
+| `--learnings off` | 단계마다 묻는 "다음을 위해 기억할까요?" 질문을 끔 | 하루 실습에서는 멈추는 횟수를 줄이는 편이 낫다. learning loop를 배우는 것이 목적이면 뺀다 |
+| `--summary-confirmation off` | 답변 요약 확인("Looks correct")을 끔 | 질문과 승인 게이트는 그대로 남는다. 잘못 읽은 답은 승인 게이트에서 잡는다 |
+| `--project-type brownfield` | 기존 코드 프로젝트로 시작하고 Reverse Engineering을 실행 | 폴더를 신규로 잘못 인식하는 일을 막는다. 기존 코드 분석은 15분 안팎 걸린다 |
+| `./vision.md를 읽고 ...` | vision note를 첫 요청의 입력으로 지정 | 요청에 파일을 지정해야 AI-DLC가 그 내용으로 계획을 세운다 |
+| `한국어로 진행해 주세요` | 대화와 산출물 언어를 정함 | AI-DLC는 요청 문장의 언어를 따른다. 영어로 요청하면 노트가 한국어여도 산출물이 영어로 나온다 |
 - Construction 전에 `aidlc/spaces/default/intents/<작업>/aidlc-state.md`에
   `Construction Iteration: unit-major`가 있는지 확인한다. 없으면
-  `aidlc engine state set-construction-iteration unit-major`를 실행한다 (Unit 하나씩 끝까지 만들어 결과를 빨리 봄).
+  `aidlc engine state set-construction-iteration unit-major`를 실행한다.
+  이유: Unit 하나를 설계부터 코드까지 끝낸 뒤 다음 Unit으로 가야 동작하는 결과를 빨리 볼 수 있다.
 - 막히면: 에이전트를 멈추고, 본인 터미널에서 `aidlc doctor --export`를 실행해 나온 `fix:` 줄을 따른다.
   리포트 파일은 퍼실리테이터에게 전달한다.
 

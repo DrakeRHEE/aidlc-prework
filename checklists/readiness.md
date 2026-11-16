@@ -19,6 +19,9 @@
 
 ## C. 실제 stage 한 번 돌려 보기
 
+> 왜: `aidlc doctor`는 새로 설치한 상태에서 hook이 한 번도 실행되지 않았어도 통과합니다. hook이 안 도는 PC는
+> 당일 "승인이 기록되지 않음" 문제로 나타나므로, 실제 stage를 한 번 돌려 hook 실행 기록을 확인합니다.
+
 - [ ] 새 채팅(Kiro는 **aidlc** 에이전트, CLI는 `kiro-cli --v3`)에서 `/aidlc express Add a --version flag to the CLI`
 - [ ] 첫 질문이나 승인 화면에 답함 (Claude Code는 선택지 선택, Kiro는 번호 입력) → 바로 멈춤
 - [ ] 터미널에서 `aidlc doctor --verbose`를 실행해 **`Hooks last fired:`** 행에 현재 시각의 hook 이름 확인
@@ -34,6 +37,8 @@
 - [ ] `sh .aidlc-prework/scripts/check-prework.sh .` → `RESULT: PASS`
 
 ## 사전 제출물 (워크샵 1주 전 권장)
+
+> 왜: 퍼실리테이터가 당일 전에 설치 문제와 범위 문제를 찾아 미리 도울 수 있습니다. 확인하는 데 몇 분이면 됩니다.
 
 1. B의 `aidlc config` 결과표와 `aidlc doctor` 요약
 2. C의 `aidlc doctor --verbose` 중 `Hooks last fired:` 행
